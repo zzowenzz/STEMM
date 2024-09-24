@@ -23,11 +23,19 @@ unseen_images = [
     "/home/deep/Owen_ssd/code/STEMM/images/KAG_airlie_000002.jpg"
 ]
 
-# Initialize session state to keep track of score and submissions
+# Initialize session state to keep track of score, submissions, and whether competition has started
 if 'score' not in st.session_state:
     st.session_state.score = 0
 if 'submitted' not in st.session_state:
     st.session_state.submitted = [False] * 5  # To track each question's submission status
+if 'competition_started' not in st.session_state:
+    st.session_state.competition_started = False  # Track whether the competition has started
+if 'answers' not in st.session_state:
+    st.session_state.answers = [None] * 5  # Keep track of user answers
+if 'all_questions_answered' not in st.session_state:
+    st.session_state.all_questions_answered = False  # To track when all questions are answered
+if 'temp_answers' not in st.session_state:
+    st.session_state.temp_answers = [None] * 5  # Store temporary answers before submission
 
 # Ensure the number of questions doesn't exceed the number of unseen images available
 if len(unseen_images) < 5:
@@ -48,33 +56,45 @@ else:
                     img = Image.open(img_path)
                     st.image(img, width=100)
 
+    # Function to check if all questions are submitted
+    def check_all_submitted():
+        return all(st.session_state.submitted)
+
     # Function to ask the questions
     def ask_questions():
-        # Add a separator between reference area and questions
-        st.markdown("---")  # Horizontal line separator
+        st.markdown("---")  # Horizontal line separator between reference and questions
+
         for idx in range(5):
-            if not st.session_state.submitted[idx]:  # If the question hasn't been answered yet
+            if not st.session_state.submitted[idx]:
                 st.markdown(f"### Question {idx + 1}: Which image is from {selected_classes[idx]}?")
                 cols = st.columns(1)
                 with cols[0]:
                     img = Image.open(questions[idx])
                     st.image(img, width=150)
 
-                # Multiple choice options
-                answer = st.radio(f"Select the correct class for Question {idx + 1}:", list(koala_classes.keys()), key=f"q{idx}")
+                # Multiple choice options with an initial "Please select an option" choice
+                options = ["Please select an option"] + list(koala_classes.keys())
+                st.session_state.temp_answers[idx] = st.radio(f"Select the correct class for Question {idx + 1}:",
+                                  options, key=f"q{idx}")
 
                 if st.button(f"Submit Question {idx + 1}", key=f"submit_q{idx}"):
-                    if answer == selected_classes[idx]:
-                        st.session_state.score = st.session_state.score + 1
-                        st.success(f"Correct! You gained 1 point. Current Score: {st.session_state.score}")
-                    else:
-                        st.session_state.score = max(0, st.session_state.score - 1)
-                        st.error(f"Incorrect! You lost 1 point. Current Score: {st.session_state.score}")
+                    if st.session_state.temp_answers[idx] != "Please select an option":
+                        st.session_state.answers[idx] = st.session_state.temp_answers[idx]
+                        if st.session_state.answers[idx] == selected_classes[idx]:
+                            st.session_state.score += 1
+                            st.success(f"Correct! You gained 1 point. Current Score: {st.session_state.score}")
+                        else:
+                            st.session_state.score = max(0, st.session_state.score - 1)
+                            st.error(f"Incorrect! You lost 1 point. Current Score: {st.session_state.score}")
 
-                    st.session_state.submitted[idx] = True  # Mark question as answered
+                        st.session_state.submitted[idx] = True  # Mark question as answered
+                        if check_all_submitted():
+                            st.session_state.all_questions_answered = True  # Mark all questions answered if true
+                    else:
+                        st.error("Please select an answer before submitting.")
             else:
-                st.info(f"Question {idx + 1} has been answered. You cannot answer it again.")
-            
+                st.info(f"Question {idx + 1} has been answered.")
+
             # Add separator between each question
             st.markdown("---")
 
@@ -82,14 +102,21 @@ else:
     def main():
         st.title("Koala Face Recognition Competition")
 
-        # Display the reference images at the bottom
+        # Display the reference images
         display_reference_images()
 
-        # Ask the 5 questions
-        ask_questions()
+        # If competition hasn't started yet, show the "Start to compete" button
+        if not st.session_state.competition_started:
+            if st.button("Start to Compete"):
+                st.session_state.competition_started = True  # Set flag to True when button is clicked
 
-        # Show final score
-        st.write(f"## Your Total Score: {st.session_state.score}")
+        # If the competition has started, display the questions
+        if st.session_state.competition_started:
+            ask_questions()
+
+            # Show final score only if all questions are answered
+            if st.session_state.all_questions_answered:
+                st.write(f"## Your Total Score: {st.session_state.score}")
 
     if __name__ == "__main__":
         main()
