@@ -34,6 +34,7 @@
 │   ├── signup.py         # User sign-up page
 │   ├── leaderboard.py    # Leaderboard page
 │   ├── competition.py    # Main competition page for multi-choice tasks
+|   |── welcome.py        # Welcome page after login
 │
 ├── /utils                # Directory for utility functions
 │   ├── auth.py           # Functions for authentication (login, signup)
@@ -44,3 +45,7 @@
 ├── requirements.txt      # Python package dependencies
 ├── README.md             # Project overview and instructions
 └── .gitignore            # Git ignore file
+
+## Branch development
+
+v1: Use can signup then login, or directly login. Use can only see the welcome page after login. Use can logout from the welcome page. Use need to click twice to jump to the welcome page
