@@ -13,39 +13,73 @@
 
 
 ## File structure
-/koala_recognition_competition
+/koala_competition/
 │
-├── /images               # Directory for storing koala images
-│   ├── /koala_1          # Images for koala 1
-│   │   ├── ref_1.jpg     # Reference images
-│   │   ├── ref_2.jpg
-│   │   ├── unseen_1.jpg  # Unseen images for questions
+├── /images/
+│   ├── /koala_1/
+│   │   ├── reference_1.jpg
+│   │   ├── reference_2.jpg
+│   │   ├── reference_3.jpg
+│   │   ├── unseen_1.jpg
 │   │   ├── unseen_2.jpg
-│   │   └── ...
-│   ├── /koala_2          # Images for koala 2
-│   └── ...               # Similarly for the rest of the koalas
+│   ├── /koala_2/
+│   │   ├── reference_1.jpg
+│   │   ├── reference_2.jpg
+│   │   ├── reference_3.jpg
+│   │   ├── unseen_1.jpg
+│   │   ├── unseen_2.jpg
+│   ├── /koala_3/
+│   ├── /koala_4/
+│   ├── /koala_5/
 │
-├── /data                 # Directory for storing user and leaderboard data
-│   ├── users.csv         # CSV file to store user emails and hashed passwords
-│   ├── leaderboard.csv   # CSV file to store user scores and number of competitions
+├── /data/
+│   ├── leaderboard.csv        # Stores user performance (email, no. of competitions, highest score)
+│   ├── users.csv              # Stores user accounts (email, hashed_password)
 │
-├── /pages                # Directory for different pages in the app
-│   ├── login.py          # User login page
-│   ├── signup.py         # User sign-up page
-│   ├── leaderboard.py    # Leaderboard page
-│   ├── competition.py    # Main competition page for multi-choice tasks
-|   |── welcome.py        # Welcome page after login
+├── /scripts/
+│   ├── auth.py                # Handles user authentication (login, signup, hashing passwords)
+│   ├── questions.py           # Generates multi-choice questions based on unseen images
+│   ├── scoring.py             # Calculates user score based on answers
+│   ├── leaderboard.py         # Updates and manages leaderboard data
 │
-├── /utils                # Directory for utility functions
-│   ├── auth.py           # Functions for authentication (login, signup)
-│   ├── leaderboard.py    # Functions to handle leaderboard (update, calculate)
-│   ├── questions.py      # Functions to generate and evaluate questions
-│
-├── app.py                # Main Streamlit app entry point
-├── requirements.txt      # Python package dependencies
-├── README.md             # Project overview and instructions
-└── .gitignore            # Git ignore file
+├── streamlit_app.py           # Main Streamlit app file
+├── requirements.txt           # List of all dependencies (Streamlit, Pandas, etc.)
+└── README.md                  # Project overview and setup instructions
 
-## Branch development
 
-v1: Use can signup then login, or directly login. Use can only see the welcome page after login. Use can logout from the welcome page. Use need to click twice to jump to the welcome page
+## Working pipeline
+1. Requirement Gathering and Planning
+- Understand the Problem
+- Functional Requirements
+    - User authentication
+        - signup
+        - login
+        - Account management
+    - Competition
+        - Reference page
+        - Questions page
+        - Score page
+    - Leaderboard
+        - Ranking
+        - Competition history
+    - Data storage
+        - User data
+        - Competition data
+        - Leaderboard data
+- Non-functional Requirements
+    - Performance
+    - Security
+    - Usability
+    - Scalability
+
+2. Design
+Wireframes, mockups, and database schema.
+
+3. Technology Stack Selection
+Frontend, backend, and database.
+
+4. Development Phase
+
+5. Testing
+
+6. Deployment
