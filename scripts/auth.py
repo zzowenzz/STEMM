@@ -32,7 +32,7 @@ def register_user(email, password):
 
     # Check if the email already exists
     if email in user_df['email'].values:
-        return False, "User already exists."
+        return False, "User already exists. Please login."
 
     # Hash the password and store the user
     hashed_password = hash_password(password).decode('utf-8')
@@ -58,3 +58,8 @@ def login_user(email, password):
         return True, "Login successful."
     else:
         return False, "Incorrect password."
+
+# Logout function
+def logout():
+    # This can remain an empty function or have any other cleanup logic if needed.
+    pass

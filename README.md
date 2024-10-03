@@ -14,37 +14,24 @@
 
 ## File structure
 /koala_competition/
-│
-├── /images/
-│   ├── /koala_1/
-│   │   ├── reference_1.jpg
-│   │   ├── reference_2.jpg
-│   │   ├── reference_3.jpg
-│   │   ├── unseen_1.jpg
-│   │   ├── unseen_2.jpg
-│   ├── /koala_2/
-│   │   ├── reference_1.jpg
-│   │   ├── reference_2.jpg
-│   │   ├── reference_3.jpg
-│   │   ├── unseen_1.jpg
-│   │   ├── unseen_2.jpg
-│   ├── /koala_3/
-│   ├── /koala_4/
-│   ├── /koala_5/
-│
-├── /data/
-│   ├── leaderboard.csv        # Stores user performance (email, no. of competitions, highest score)
-│   ├── users.csv              # Stores user accounts (email, hashed_password)
-│
 ├── /scripts/
-│   ├── auth.py                # Handles user authentication (login, signup, hashing passwords)
-│   ├── questions.py           # Generates multi-choice questions based on unseen images
-│   ├── scoring.py             # Calculates user score based on answers
-│   ├── leaderboard.py         # Updates and manages leaderboard data
-│
-├── streamlit_app.py           # Main Streamlit app file
-├── requirements.txt           # List of all dependencies (Streamlit, Pandas, etc.)
-└── README.md                  # Project overview and setup instructions
+│   ├── auth.py                 # For user authentication (register, login, logout)
+│   ├── images.py               # For handling reference and unseen images
+│   ├── competition.py          # For handling the competition logic (rules, quiz, etc.)
+│   ├── leaderboard.py          # For leaderboard management (if needed in the future)
+├── /data/
+│   ├── users.csv               # User data (email, hashed passwords)
+│   ├── leaderboard.csv         # Leaderboard data (scores, number of attempts)
+├── /images/                    # Directory containing koala images
+│   ├── /Koala 1/               # Images for Koala 1 (reference and unseen images)
+│   ├── /Koala 2/
+│   ├── /Koala 3/
+│   ├── /Koala 4/
+│   ├── /Koala 5/
+├── streamlit_app.py            # Main Streamlit app file
+├── requirements.txt            # Python dependencies
+└── README.md                   # Project overview and setup instructions
+
 
 
 ## Working pipeline
