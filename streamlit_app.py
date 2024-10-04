@@ -1,12 +1,12 @@
 import streamlit as st
-from scripts.auth import register_user, login_user, logout  # Keep the logout import for potential future use
-from scripts.competition import show_competition_rules, show_reference_images, show_quiz
+from scripts.auth import register_user, login_user, logout
+from scripts.competition import show_competition_rules, show_reference_images, show_multiple_quizzes
 
 # Initialize session state to track if the user is logged in and for navigation
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
     st.session_state['email'] = ""
-    st.session_state['page'] = "home"
+    st.session_state['page'] = "home"  # Default to home page
 
 # Handle user authentication (login, signup)
 if not st.session_state['logged_in']:
@@ -35,15 +35,19 @@ if not st.session_state['logged_in']:
 # Main content when logged in
 if st.session_state['logged_in']:
     st.success(f"Logged in as {st.session_state['email']}")
-    if st.button("Start to compete"):
-        st.session_state['page'] = "competition"
+    
+    # Only show the "Start to compete" button on the home page
+    if st.session_state['page'] == "home":
+        if st.button("Start to compete"):
+            st.session_state['page'] = "competition"  # Switch to competition page
 
+    # Show competition content if user clicked "Start to compete"
     if st.session_state['page'] == "competition":
         show_competition_rules()
-        show_reference_images()
-        show_quiz()
+        show_reference_images()  # Show the reference images
+        show_multiple_quizzes(num_quizzes=3)  # Show multiple quizzes
 
-    # Handle logout here by resetting the session state directly
+    # Show the Logout button all the time while logged in
     if st.button("Logout"):
         st.session_state['logged_in'] = False
         st.session_state['email'] = ""
