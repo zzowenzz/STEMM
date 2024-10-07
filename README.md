@@ -13,6 +13,7 @@
 
 
 ## File structure
+```
 /koala_competition/
 ├── /scripts/
 │   ├── auth.py                 # For user authentication (register, login, logout)
@@ -31,7 +32,7 @@
 ├── streamlit_app.py            # Main Streamlit app file
 ├── requirements.txt            # Python dependencies
 └── README.md                   # Project overview and setup instructions
-
+```
 
 
 ## Working pipeline
