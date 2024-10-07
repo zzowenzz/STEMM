@@ -1,8 +1,9 @@
 import streamlit as st
-from scripts.auth import register_user, login_user, logout
+from scripts.auth import register_user, login_user
 from scripts.competition import show_competition_rules, show_reference_images, show_multiple_quizzes
+from scripts.leaderboard import show_leaderboard
 
-# Initialize session state to track if the user is logged in and for navigation
+# Initialize session state for user login and navigation
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
     st.session_state['email'] = ""
@@ -36,20 +37,21 @@ if not st.session_state['logged_in']:
 if st.session_state['logged_in']:
     st.success(f"Logged in as {st.session_state['email']}")
     
-    # Only show the "Start to compete" button on the home page
     if st.session_state['page'] == "home":
         if st.button("Start to compete"):
             st.session_state['page'] = "competition"  # Switch to competition page
+        elif st.button("View Leaderboard"):
+            st.session_state['page'] = "leaderboard"  # Switch to leaderboard page
 
-    # Show competition content if user clicked "Start to compete"
     if st.session_state['page'] == "competition":
         show_competition_rules()
-        show_reference_images()  # Show the reference images
-        show_multiple_quizzes(num_quizzes=3)  # Show multiple quizzes
+        show_reference_images()
+        show_multiple_quizzes(num_quizzes=3, user_email=st.session_state['email'])
 
-    # Show the Logout button all the time while logged in
+    if st.session_state['page'] == "leaderboard":
+        show_leaderboard()
+
     if st.button("Logout"):
         st.session_state['logged_in'] = False
         st.session_state['email'] = ""
         st.session_state['page'] = "home"
-        st.success("You have been logged out.")

@@ -1,5 +1,6 @@
 import streamlit as st
 from scripts.images import get_reference_images, get_quiz_image, get_koala_classes, resize_image
+from scripts.leaderboard import update_leaderboard
 import random
 import os
 
@@ -96,16 +97,16 @@ def show_quiz(quiz_index):
                     st.session_state['score'] -= 1  # Subtract 1 point for an incorrect answer
 
 # Function to show multiple quizzes and track the score
-def show_multiple_quizzes(num_quizzes=3):
-    # Show the number of quizzes in the same heading style
+def show_multiple_quizzes(num_quizzes=3, user_email="user@example.com"):
     st.write(f"## You will be shown {num_quizzes} quizzes")
 
-    # Show each quiz
     for i in range(num_quizzes):
         show_quiz(quiz_index=i)
 
-    # Check if all quizzes are submitted
+    # Show the final score after all quizzes are submitted
     if all(st.session_state.get(f"submitted_{i}", False) for i in range(num_quizzes)):
-        # Once all quizzes are submitted, show the final score
         st.write(f"## Your final score is: {st.session_state['score']}")
+
+        # Update the leaderboard with the user's email and final score
+        update_leaderboard(user_email, st.session_state['score'])
 
