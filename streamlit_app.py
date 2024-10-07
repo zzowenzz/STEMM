@@ -11,16 +11,19 @@ if 'logged_in' not in st.session_state:
 
 # Top Navigation Bar
 def show_top_navbar():
-    cols = st.columns([1, 1, 1])
-    
-    with cols[0]:
-        if st.button("Home"):
+    # Create a navigation bar with three columns for the buttons
+    nav_col = st.columns([1, 1, 1])  # Allocate equal space for each button
+
+    with nav_col[0]:
+        if st.button("Home", key="home_btn", use_container_width=True):
             st.session_state['page'] = "home"
-    with cols[1]:
-        if st.button("Competition"):
+
+    with nav_col[1]:
+        if st.button("Competition", key="compete_btn", use_container_width=True):
             st.session_state['page'] = "competition"
-    with cols[2]:
-        if st.button("Rank"):
+
+    with nav_col[2]:
+        if st.button("Rank", key="rank_btn", use_container_width=True):
             st.session_state['page'] = "leaderboard"
 
 # Display the navigation bar on top of every page
