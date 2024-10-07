@@ -15,6 +15,8 @@
 ## File structure
 ```
 /koala_competition/
+│   .streamlit/
+│   └── secrets.toml
 ├── /scripts/
 │   ├── auth.py                 # For user authentication (register, login, logout)
 │   ├── images.py               # For handling reference and unseen images
