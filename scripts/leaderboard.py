@@ -1,43 +1,53 @@
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, select
 import pandas as pd
 import streamlit as st
-import os
 
-LEADERBOARD_FILE = './data/leaderboard.csv'
+# Set up the database connection using Streamlit secrets
+DATABASE_URL = st.secrets["DATABASE_URL"]
+engine = create_engine(DATABASE_URL)
+metadata = MetaData()
 
-# Function to load the leaderboard from a CSV file
+# Define the leaderboard table structure
+leaderboard_table = Table(
+    'leaderboard', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('email', String, unique=True),
+    Column('attempts', Integer, default=0),
+    Column('highest_score', Integer, default=0)
+)
+
+# Function to load the leaderboard from the database
 def load_leaderboard():
-    if os.path.exists(LEADERBOARD_FILE):
-        return pd.read_csv(LEADERBOARD_FILE)
-    else:
-        # If the leaderboard doesn't exist, return an empty dataframe
-        return pd.DataFrame(columns=['email', 'attempts', 'highest_score'])
+    with engine.connect() as connection:
+        result = connection.execute(select([leaderboard_table]))
+        # Convert result to a Pandas DataFrame
+        leaderboard_df = pd.DataFrame(result.fetchall(), columns=['id', 'email', 'attempts', 'highest_score'])
+        leaderboard_df.drop(columns=['id'], inplace=True)  # Drop the ID column as it's not needed
+    return leaderboard_df
 
-# Function to save the leaderboard back to the CSV file
-def save_leaderboard(leaderboard_df):
-    leaderboard_df.to_csv(LEADERBOARD_FILE, index=False)
-
-# Function to update the leaderboard after each competition
+# Function to update the leaderboard in the database
 def update_leaderboard(email, score):
-    leaderboard_df = load_leaderboard()
+    with engine.connect() as connection:
+        # Check if the user already exists in the leaderboard
+        existing_user = connection.execute(
+            select([leaderboard_table]).where(leaderboard_table.c.email == email)
+        ).fetchone()
 
-    # Check if the user already exists in the leaderboard
-    if email in leaderboard_df['email'].values:
-        # Update existing user record
-        user_row = leaderboard_df[leaderboard_df['email'] == email].iloc[0]
-        leaderboard_df.loc[leaderboard_df['email'] == email, 'attempts'] += 1
-        if score > user_row['highest_score']:
-            leaderboard_df.loc[leaderboard_df['email'] == email, 'highest_score'] = score
-    else:
-        # Add a new user to the leaderboard
-        new_user = pd.DataFrame({
-            'email': [email],
-            'attempts': [1],
-            'highest_score': [score]
-        })
-        leaderboard_df = pd.concat([leaderboard_df, new_user], ignore_index=True)
+        if existing_user:
+            # Update the existing user record
+            attempts = existing_user['attempts'] + 1
+            highest_score = max(existing_user['highest_score'], score)
 
-    # Save the updated leaderboard
-    save_leaderboard(leaderboard_df)
+            connection.execute(
+                leaderboard_table.update()
+                .where(leaderboard_table.c.email == email)
+                .values(attempts=attempts, highest_score=highest_score)
+            )
+        else:
+            # Add a new user to the leaderboard
+            connection.execute(
+                leaderboard_table.insert().values(email=email, attempts=1, highest_score=score)
+            )
 
 # Function to display the leaderboard
 def show_leaderboard():
