@@ -55,7 +55,7 @@ def login_user(email, password):
 
     # Verify password
     if verify_password(password, stored_hashed_password):
-        return True, "Login successful."
+        return True, "Login successful. Please click the Competition button to start."
     else:
         return False, "Incorrect password."
 

@@ -9,8 +9,35 @@ if 'logged_in' not in st.session_state:
     st.session_state['email'] = ""
     st.session_state['page'] = "home"  # Default to home page
 
-# Handle user authentication (login, signup)
-if not st.session_state['logged_in']:
+# Top Navigation Bar
+def show_top_navbar():
+    cols = st.columns([1, 1, 1])
+    
+    with cols[0]:
+        if st.button("Home"):
+            st.session_state['page'] = "home"
+    with cols[1]:
+        if st.button("Competition"):
+            st.session_state['page'] = "competition"
+    with cols[2]:
+        if st.button("Rank"):
+            st.session_state['page'] = "leaderboard"
+
+# Display the navigation bar on top of every page
+show_top_navbar()
+
+# Function to display the home page
+def show_home():
+    st.write("## Welcome to our site")
+    st.write("""
+        This is a STEMM Experience Day on 17 October. This event will be at Nathan and Gold Coast, Griffith University.
+        Our aim is to entice high school students and to use for future Open Days.
+    """)
+    st.write("""
+        Come and compete against AI on koala face recognition! Guess who will win? You will also learn how the AI system works, when it is connected to hundreds of cameras to monitor and analyse koala road crossing behaviour, and to reduce koala vehicle strikes.
+    """)
+
+    st.write("### Login or Signup")
     option = st.selectbox("Login or Signup", ["Login", "Signup"])
 
     if option == "Signup":
@@ -22,6 +49,7 @@ if not st.session_state['logged_in']:
             if success:
                 st.session_state['logged_in'] = True
                 st.session_state['email'] = email
+                st.session_state['page'] = "competition"  # Redirect to competition page after signup
 
     elif option == "Login":
         email = st.text_input("Email", "")
@@ -32,26 +60,31 @@ if not st.session_state['logged_in']:
             if success:
                 st.session_state['logged_in'] = True
                 st.session_state['email'] = email
+                st.session_state['page'] = "competition"  # Redirect to competition page after login
 
-# Main content when logged in
+# Handle user navigation and authentication
 if st.session_state['logged_in']:
     st.success(f"Logged in as {st.session_state['email']}")
-    
-    if st.session_state['page'] == "home":
-        if st.button("Start to compete"):
-            st.session_state['page'] = "competition"  # Switch to competition page
-        elif st.button("View Leaderboard"):
-            st.session_state['page'] = "leaderboard"  # Switch to leaderboard page
 
-    if st.session_state['page'] == "competition":
+    if st.session_state['page'] == "home":
+        show_home()
+
+    elif st.session_state['page'] == "competition":
         show_competition_rules()
         show_reference_images()
         show_multiple_quizzes(num_quizzes=3, user_email=st.session_state['email'])
 
-    if st.session_state['page'] == "leaderboard":
+    elif st.session_state['page'] == "leaderboard":
         show_leaderboard()
 
     if st.button("Logout"):
         st.session_state['logged_in'] = False
         st.session_state['email'] = ""
         st.session_state['page'] = "home"
+        st.success("You have been logged out.")
+else:
+    if st.session_state['page'] == "home":
+        show_home()
+    elif st.session_state['page'] == "competition" or st.session_state['page'] == "leaderboard":
+        st.warning("You need to be logged in to access this page. Please login or sign up.")
+        show_home()
