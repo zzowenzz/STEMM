@@ -45,56 +45,66 @@ def show_reference_images():
 
 # Function to show a single quiz
 def show_quiz(quiz_index):
-    koala_classes = get_koala_classes()
+    # Initialize session state for the quiz if not already set
+    if f"quiz_{quiz_index}_initialized" not in st.session_state:
+        # Pick a random koala class for the correct answer
+        correct_koala_class = random.choice(get_koala_classes())
+        # Get an unseen image from the correct class
+        quiz_image = get_quiz_image(correct_koala_class)
+        # Select 3 incorrect options (other koala classes)
+        false_koala_classes = random.sample(
+            [cls for cls in get_koala_classes() if cls != correct_koala_class], 3
+        )
+        # Combine correct and false answers, then shuffle the choices
+        choices = false_koala_classes + [correct_koala_class]
+        random.shuffle(choices)
 
-    # Step 1: Pick a random koala class for the correct answer
-    correct_koala_class = random.choice(koala_classes)
-    quiz_image = get_quiz_image(correct_koala_class)  # Get unseen image from the correct class
+        # Store everything in session state
+        st.session_state[f"quiz_{quiz_index}_initialized"] = True
+        st.session_state[f"quiz_{quiz_index}_image"] = quiz_image
+        st.session_state[f"quiz_{quiz_index}_correct"] = correct_koala_class
+        st.session_state[f"quiz_{quiz_index}_choices"] = choices
 
-    # Check if the user has already submitted this quiz
+    # Retrieve the stored state
+    quiz_image = st.session_state[f"quiz_{quiz_index}_image"]
+    correct_koala_class = st.session_state[f"quiz_{quiz_index}_correct"]
+    choices = st.session_state[f"quiz_{quiz_index}_choices"]
+
+    # Display the quiz
+    st.write(f"### Quiz {quiz_index + 1}: Identify the Koala")
+    st.write("Select the correct koala for the image below:")
+
+    # Show the quiz image
+    img = resize_image(quiz_image, size=(200, 200))
+    st.image(img, width=400)
+
+    # Display the radio buttons
+    selected_koala = st.radio(f"Which koala is this?", choices, key=f"radio_{quiz_index}")
+
+    # Check if the quiz has already been submitted
     if f"submitted_{quiz_index}" not in st.session_state:
         st.session_state[f"submitted_{quiz_index}"] = False
 
-    # If the quiz is submitted, show the "Quiz is submitted" message
-    if st.session_state[f"submitted_{quiz_index}"]:
-        st.error(f"Quiz {quiz_index + 1} is submitted.")
-    else:
-        # Generate a quiz with 4 choices: 1 correct and 3 incorrect
-        st.write(f"### Quiz {quiz_index + 1}: Identify the Koala")
-        st.write("Select the correct koala for the image below:")
-
-        # Step 2: Select 3 incorrect options (other koala classes)
-        false_koala_classes = random.sample([cls for cls in koala_classes if cls != correct_koala_class], 3)
-
-        # Step 3: Combine correct and false answers, then shuffle the choices
-        choices = false_koala_classes + [correct_koala_class]  # Include the correct answer
-        random.shuffle(choices)  # Shuffle the choices to randomize the position of the correct answer
-
-        # Step 4: Show the quiz image and options
-        img = resize_image(quiz_image, size=(200, 200))  # Resize the quiz image
-        st.image(img, width=400)
-
-        # Show the radio buttons for the user to select an option
-        selected_koala = st.radio(f"Which koala is this?", choices, key=f"radio_{quiz_index}")
-
-        # Step 5: Handle the submission and scoring
+    # Display the submit button only if the quiz has not been submitted
+    if not st.session_state[f"submitted_{quiz_index}"]:
         if st.button("Submit Answer", key=f"submit_{quiz_index}"):
             # Mark the quiz as submitted
             st.session_state[f"submitted_{quiz_index}"] = True
 
-            # Initialize score if not already done
+            # Initialize the score if not done yet
             if 'score' not in st.session_state:
                 st.session_state['score'] = 0
 
-            # Check if the answer is correct
+            # Check if the user's answer is correct
             if selected_koala == correct_koala_class:
                 st.success(f"Correct! This is {correct_koala_class}.")
-                st.session_state['score'] += 1  # Add 1 point for a correct answer
+                st.session_state['score'] += 1  # Increase score by 1
             else:
                 st.error(f"Wrong! This was {correct_koala_class}.")
-                # Only subtract a point if the score is greater than 0
+                # Decrease score by 1 if it's greater than 0
                 if st.session_state['score'] > 0:
-                    st.session_state['score'] -= 1  # Subtract 1 point for an incorrect answer
+                    st.session_state['score'] -= 1
+
 
 # Function to show multiple quizzes and track the score
 def show_multiple_quizzes(num_quizzes=3, user_email="user@example.com"):
