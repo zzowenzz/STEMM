@@ -3,3 +3,5 @@ images
 fronted/node_modules/
 
 scripts/__pycache__/
+
+.streamlit/
