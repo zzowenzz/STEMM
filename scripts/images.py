@@ -2,6 +2,7 @@ import boto3
 import random
 from PIL import Image
 import streamlit as st
+import requests
 
 # Initialize a session using boto3 and provide your AWS credentials securely using Streamlit secrets
 s3 = boto3.client(
