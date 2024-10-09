@@ -18,6 +18,9 @@ leaderboard_table = Table(
     Column('highest_score', Integer, default=0)
 )
 
+# Create the table if it does not exist
+metadata.create_all(engine)
+
 # Function to load the leaderboard from the database
 def load_leaderboard():
     with engine.connect() as connection:
