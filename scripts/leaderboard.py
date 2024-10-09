@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, select
 import pandas as pd
 import streamlit as st
+import os
 
 # Set up the database connection using Streamlit secrets
-DATABASE_URL = st.secrets["DATABASE_URL"]
+DATABASE_URL = os.environ.get["DATABASE_URL"]
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 
