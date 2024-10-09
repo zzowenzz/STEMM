@@ -78,3 +78,11 @@ As I store the images and data in the local directory, I need to migrate your lo
 - Cloud Database for User Data and Leaderboard. Store the ranking data in ASW RDS with Aurora PostgreSQL.
 - Generate a Docker image.
 - Deploy the Docker image to Heroku.
+    - login `heroku login -i `
+    - delete the existing app `heroku apps:destroy --app your-app-name --confirm your-app-name`
+    - create a new app `heroku create your-app-name`
+    - set the deployment method using Docer `heroku stack:set container`
+    - prepare Dockerfile, requirements.txt, and Procfile
+    - config environment variables like AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, S3_BUCKET_NAME, DATABASE_URL, SECRET_KEY, etc.
+    - commit changes and push code to Heroku `git add . && git commit -m "Deploy to Heroku" && git push heroku main
+`
