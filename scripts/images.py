@@ -8,13 +8,13 @@ import os
 # Initialize a session using boto3 and provide your AWS credentials securely using Streamlit secrets
 s3 = boto3.client(
     "s3",
-    aws_access_key_id=os.environ.get["AWS_ACCESS_KEY_ID"],
-    aws_secret_access_key=os.environ.get["AWS_SECRET_ACCESS_KEY"],
-    region_name=os.environ.get["AWS_REGION"]
+    aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
+    region_name=os.environ.get("AWS_REGION")
 )
 
 # Define the bucket name from Streamlit secrets
-BUCKET_NAME = os.environ.get["S3_BUCKET_NAME"]
+BUCKET_NAME = os.environ.get("S3_BUCKET_NAME")
 
 # Koala classes (subdirectories in your S3 bucket under the main images directory)
 koala_classes = ["DES_alana", "DES_alex", "DES_ally", "DES_anke"]
