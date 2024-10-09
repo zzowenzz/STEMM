@@ -8,6 +8,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 
+
 # Define the leaderboard table structure
 leaderboard_table = Table(
     'leaderboard', metadata,

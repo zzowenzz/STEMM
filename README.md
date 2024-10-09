@@ -84,5 +84,4 @@ As I store the images and data in the local directory, I need to migrate your lo
     - set the deployment method using Docer `heroku stack:set container`
     - prepare Dockerfile, requirements.txt, and Procfile
     - config environment variables like AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, S3_BUCKET_NAME, DATABASE_URL, SECRET_KEY, etc.
-    - commit changes and push code to Heroku `git add . && git commit -m "Deploy to Heroku" && git push heroku main
-`
+    - commit changes and push code to Heroku `git add . && git commit -m "Deploy to Heroku" && git push heroku main`
