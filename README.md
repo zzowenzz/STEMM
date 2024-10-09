@@ -76,3 +76,6 @@ Frontend, backend, and database.
 As I store the images and data in the local directory, I need to migrate your locally stored data (CSV files) and images to a cloud-based storage solution. 
 - Cloud Storage for Images. Store your images (both reference and quiz images) in a cloud storage service such as Amazon S3, Google Cloud Storage, or Azure Blob Storage. Use Streamlit to dynamically fetch these images when needed based on URLs or paths stored in your database.
 - Cloud Database for User Data and Leaderboard. Use a cloud-based database (e.g., PostgreSQL, MySQL, or Firebase) to store user data (emails and passwords) and leaderboard information. This ensures the data is persistent and accessible by multiple users simultaneously
+
+Branches
+- streamlit: Streamlit community deployment with AWS bucket and AWS RDS
